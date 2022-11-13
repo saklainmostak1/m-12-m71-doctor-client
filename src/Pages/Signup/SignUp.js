@@ -1,19 +1,35 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthProvider';
 
 const SignUp = () => {
-    const {createUser} = useContext(AuthContext)
+    const {createUser, updateUser} = useContext(AuthContext)
     const {register, handleSubmit, formState: {errors}} = useForm()
+    const [signUpError, setSignUpError] = useState('')
     const handleSignUp = (data) =>{
         console.log(data);
+        setSignUpError('')
         createUser(data.email, data.password)
         .then(result => {
-            const user = result.user
-            console.log(user);
+                const user = result.user
+                console.log(user);
+                toast.success('User Created SucessFully')
+                const userInfo ={
+                    displayName: data.name
+                }
+                updateUser(userInfo)
+                .then(() => {})
+                .catch(error => {
+                    console.error(error)
+                    
+                })
         })
-        .catch(error => console.error(error))
+        .catch(error => {
+            setSignUpError(error.message)
+            console.error(error)
+        })
     }
     return (
         <div className='h-[800px] flex justify-center items-center'>
@@ -51,10 +67,12 @@ const SignUp = () => {
                         pattern: {value: /(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])/ , message:'password must be strong'}
                     })} 
                       className="input input-bordered w-full max-w-xs" />   
-                      <p>{errors.password && <p className='text-red-600'>{errors.password.message}</p> }</p>               
+                      <p>{errors.password && <p className='text-red-600'>{errors.password.message}</p> }</p>              
                 </div>
+                {  signUpError && <p className='text-red-600'>{signUpError}</p> }
                 <br />
                 <input className='btn btn-accent w-full' value='Sign Up' type="submit" />
+               
             </form>
             <p>Already Have An Account <Link className='text-secondary' to='/login'>Please Login</Link> </p>
             <div className="divider">OR</div>
