@@ -9,7 +9,9 @@ const AppiontmentOption = ({ option, setTreatment }) => {
                 <p>{slots.length > 0 ? slots[0] : 'Try Another Day'}</p>
                 <p>{slots.length} {slots.length > 1 ? 'spaces' : 'space'} </p>
                 <div className="card-actions justify-center">
-                    <label onClick={() => setTreatment(option)} 
+                    <label
+                    disable={slots.length === 0}
+                    onClick={() => setTreatment(option)} 
                     htmlFor="booking-modal" className="btn btn-primary text-white">Book Appiontment</label>
                 </div>
             </div>
