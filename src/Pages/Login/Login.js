@@ -16,11 +16,10 @@ const Login = () => {
                         <label className="label">
                             <span className="label-text">Email</span>
                         </label>
-                        <input type="text"
+                        <input type="email"
                          {...register("email", { required: 'Email Adress is required' })} 
                           className="input input-bordered w-full max-w-xs" />
                         {errors.email && <p className='text-red-600'>{errors.email?.message}</p>}                    
-                        <input   />   
                     </div>
                     <div className="form-control w-full max-w-xs">
                         <label className="label">
@@ -34,8 +33,7 @@ const Login = () => {
                            {errors.password && <p className='text-red-600'>{errors.password?.message}</p>} 
                         <label className="label">
                             <span className="label-text">Forget Password</span>
-                        </label>                    
-                        <input   />  
+                        </label>                     
                     </div>
                     <input className='btn btn-accent w-full' value='Login' type="submit" />
                 </form>
