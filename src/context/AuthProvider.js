@@ -26,7 +26,7 @@ const [user, setUser] = useState(null)
 
   const updateUser = (userInfo) =>{
     setLoading(true)
-   return updateProfile(user, userInfo)
+   return updateProfile(auth.currentUser, userInfo)
   }
 
   useEffect(() =>{
