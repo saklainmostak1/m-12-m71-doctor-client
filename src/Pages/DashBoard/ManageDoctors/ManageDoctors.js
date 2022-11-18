@@ -1,8 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
-import React from 'react';
+import React, { useState } from 'react';
+import ConfirmationModal from '../../Shared/ConfarmationMOdal/ConfirmationModal';
 import Loading from '../../Shared/Loading/Loading';
 
 const ManageDoctors = () => {
+    const [deletingDoctor, setDeletingDoctor] = useState(null)
+
+    const closeModal = () =>{
+        setDeletingDoctor(null)
+    }
+    const handleDeleteDoctor = (doctor) =>{
+        console.log(doctor);
+    }
     const { data: doctors, isLoading } = useQuery({
         queryKey: ['doctors'],
         queryFn: async () => {
@@ -20,7 +29,7 @@ const ManageDoctors = () => {
             }
         }
     })
-    if(isLoading){
+    if (isLoading) {
         return <Loading></Loading>
     }
     return (
@@ -53,12 +62,23 @@ const ManageDoctors = () => {
                                 <td>{doctor.name}</td>
                                 <td>{doctor.email}</td>
                                 <td>{doctor.specialty}</td>
-                                <td><button className="btn btn-sm btn-error">Delete</button></td>
+                                <td>  
+                                    <label onClick={() => setDeletingDoctor(doctor)} htmlFor="confirmation-modal" className="btn btn-sm btn-error">Delete</label>
+                                </td>
                             </tr>)
                         }
                     </tbody>
                 </table>
             </div>
+            {
+                deletingDoctor && <ConfirmationModal
+                title={`Are you sure to delete?`}
+                message={`if you delete ${deletingDoctor.name}. it cannot be undone `}
+                closeModal={closeModal}
+                modalData = {deletingDoctor}
+                sucessAction = {handleDeleteDoctor}
+                ></ConfirmationModal>
+            }
         </div>
     );
 };
