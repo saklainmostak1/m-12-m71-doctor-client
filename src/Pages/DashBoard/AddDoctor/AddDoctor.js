@@ -6,6 +6,7 @@ import Loading from '../../Shared/Loading/Loading';
 const AddDoctor = () => {
     const { register, handleSubmit, formState: { errors } } = useForm()
 
+    const imageHostKey = process.env.REACT_APP_imgbb_key;
     const {data: specialties , isLoading} = useQuery({
         queryKey: ['specialty'],
         queryFn: async() =>{
@@ -16,7 +17,28 @@ const AddDoctor = () => {
         }
     })
     const handleAddDoctor = data => {
-        console.log(data);
+        console.log(data.image);
+        const image = data.image[0]
+        const formData = new FormData()
+        formData.append('image', image)
+        const url = `https://api.imgbb.com/1/upload?expiration=600&key=${imageHostKey}`
+        fetch(url, {
+            method: 'POST',
+            body: formData
+        })
+        .then(Response => Response.json())
+        .then(imgData =>{
+            console.log(imgData);
+            if(imgData.success){
+                console.log(imgData.data.url);
+                const doctor = {
+                    name: data.name,
+                    email: data.email,
+                    specialty: data.specialty,
+                    image: imgData.data.url
+                }
+            }
+        })
     }
     if(isLoading){
         return <Loading></Loading>
@@ -66,7 +88,7 @@ const AddDoctor = () => {
                     <label className="label">
                         <span className="label-text">Photo</span>
                     </label>
-                    <input type="file" {...register('img', {
+                    <input type="file" {...register('image', {
                         required: 'Photo is requared'
                     })}
 
