@@ -1,5 +1,11 @@
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 import React from 'react';
 import { useLoaderData } from 'react-router-dom';
+import CheckOutForm from './CheckOutForm';
+
+
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PK);
 
 const Payment = () => {
     const bookings = useLoaderData()
@@ -9,6 +15,12 @@ const Payment = () => {
         <div>
             <h2 className='text-3xl'>Payment For {treatment} </h2>
             <p className='text-xl'>Please Pay <strong>${price} </strong> for your appointment on {appiontmentDate} at {slot} </p>
+            <div className='w-96 my-6'>
+            <Elements stripe={stripePromise}>
+                    <CheckOutForm />
+                        {/* booking={booking} */}
+                </Elements>
+            </div>
         </div>
     );
 };
