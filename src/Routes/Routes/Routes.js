@@ -6,8 +6,10 @@ import AddDoctor from "../../Pages/DashBoard/AddDoctor/AddDoctor"
 import AllUSers from "../../Pages/DashBoard/AllUsers/AllUSers"
 import ManageDoctors from "../../Pages/DashBoard/ManageDoctors/ManageDoctors"
 import MyAppointment from "../../Pages/DashBoard/MyAppointment/MyAppointment"
+import Payment from "../../Pages/DashBoard/Payment/Payment"
 import Home from "../../Pages/Home/Home/Home"
 import Login from "../../Pages/Login/Login"
+import DisplayError from "../../Pages/Shared/DisplayError/DisplayError"
 import SignUp from "../../Pages/Signup/SignUp"
 import AdminRoute from "../AdminRoute/AdminRoute"
 import PrivateRoute from "../PrivateRoute/PrivateRoute"
@@ -16,6 +18,7 @@ export const router = createBrowserRouter([
     {
         path: '/',
         element: <Main></Main>,
+        errorElement: <DisplayError></DisplayError>,
         children: [
             {
                 path: '/',
@@ -39,6 +42,7 @@ export const router = createBrowserRouter([
     {
         path: '/dashboard',
        element: <PrivateRoute><DashBoardLayout></DashBoardLayout></PrivateRoute>,
+       errorElement: <DisplayError></DisplayError>,
        children: [
         {
             path: '/dashboard',
@@ -55,6 +59,11 @@ export const router = createBrowserRouter([
         {
             path: '/dashboard/managedoctors',
             element: <AdminRoute><ManageDoctors></ManageDoctors></AdminRoute>
+        },
+        {
+            path: '/dashboard/payment/:id',
+            element: <AdminRoute><Payment></Payment></AdminRoute>,
+            loader: ({params}) => fetch(`http://localhost:5000/bookings/${params.id}`)
         },
        ]
     },
