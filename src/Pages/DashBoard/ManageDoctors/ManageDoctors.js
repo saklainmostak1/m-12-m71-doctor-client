@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 import ConfirmationModal from '../../Shared/ConfarmationMOdal/ConfirmationModal';
 import Loading from '../../Shared/Loading/Loading';
 
@@ -9,10 +10,8 @@ const ManageDoctors = () => {
     const closeModal = () =>{
         setDeletingDoctor(null)
     }
-    const handleDeleteDoctor = (doctor) =>{
-        console.log(doctor);
-    }
-    const { data: doctors, isLoading } = useQuery({
+  
+    const { data: doctors, isLoading, refetch } = useQuery({
         queryKey: ['doctors'],
         queryFn: async () => {
             try {
@@ -29,6 +28,23 @@ const ManageDoctors = () => {
             }
         }
     })
+    const handleDeleteDoctor = (doctor) =>{
+        fetch(`http://localhost:5000/doctors/${doctor._id}`, {
+            method: 'DELETE',
+            headers:{
+                authorization: `bearer ${localStorage.getItem('accessToken')}`
+            }
+        })
+        .then(Response => Response.json())
+        .then(data =>{
+            console.log(data);
+            if(data.deletedCount > 0){
+
+                refetch()
+                toast.success(`Doctor ${doctor.name} deleted sucessfully`)
+            }
+        })
+    }
     if (isLoading) {
         return <Loading></Loading>
     }
@@ -77,6 +93,7 @@ const ManageDoctors = () => {
                 closeModal={closeModal}
                 modalData = {deletingDoctor}
                 sucessAction = {handleDeleteDoctor}
+                sucessButtonName='Delete'
                 ></ConfirmationModal>
             }
         </div>
