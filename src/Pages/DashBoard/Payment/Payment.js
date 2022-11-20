@@ -7,6 +7,7 @@ import CheckOutForm from './CheckOutForm';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PK);
 
+
 const Payment = () => {
     const bookings = useLoaderData()
     const {treatment, price, appiontmentDate, slot } = bookings
@@ -17,8 +18,10 @@ const Payment = () => {
             <p className='text-xl'>Please Pay <strong>${price} </strong> for your appointment on {appiontmentDate} at {slot} </p>
             <div className='w-96 my-6'>
             <Elements stripe={stripePromise}>
-                    <CheckOutForm />
-                        {/* booking={booking} */}
+                    <CheckOutForm
+                     bookings={bookings}
+                    />
+                       
                 </Elements>
             </div>
         </div>

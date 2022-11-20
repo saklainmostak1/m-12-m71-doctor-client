@@ -1,10 +1,11 @@
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import React, { useState } from 'react';
 
-const CheckOutForm = () => {
+const CheckOutForm = ({bookings}) => {
     const stripe = useStripe()
     const [cardError, setCardError] = useState('');
     const elements = useElements()
+    const {price} = bookings
     const handleSubmit = async(event) =>{
         event.preventDefault()
         if(!stripe || !elements){
@@ -28,7 +29,7 @@ const CheckOutForm = () => {
 
     }
     return (
-        <div>
+        <>
             <form onSubmit={handleSubmit}>
                 <CardElement
                     options={{
@@ -53,7 +54,8 @@ const CheckOutForm = () => {
                     Pay
                 </button>
             </form>
-        </div>
+            <p className="text-red-500">{cardError}</p>
+        </>
     );
 };
 
